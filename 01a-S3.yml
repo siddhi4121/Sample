@@ -1,0 +1,12 @@
+---
+# CloudFormation Sections
+# s3-01a-stack-hellobucket-17vjpyrkdxm6a
+# <STACK_NAME>-<LOGICAL_ID>-<RANDOM_STRING>
+
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Create a S3 bucket with Default Properties
+
+Resources:
+  HelloBucket:
+    Type: AWS::S3::Bucket

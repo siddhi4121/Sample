@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: This tempalte will deploy EC2 only when the parameter "EnvironmentName" has value as "prod", this template will work in us-east-1 only
+Parameters:
+  KeyName:
+    Type: 'AWS::EC2::KeyPair::KeyName'
+    Default: mykey
+  EnvironmentName:
+    Description: SDLC Environment Value e.g dev/qa/prod.
+    Type: String
+
+Conditions:
+  CreateProdResources: !Equals [ !Ref EnvironmentName, prod ]
+
+Resources:
+  Ec2Instance:
+    Type: 'AWS::EC2::Instance'
+    Condition: CreateProdResources
+    Properties:
+      SecurityGroups:
+        - !Ref InstanceSecurityGroup
+      KeyName: aws-desktop-NV
+      InstanceType: t2.micro
+      ImageId: 'ami-0b898040803850657'
+  InstanceSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupName: !Join [ "-", [ !Ref EnvironmentName, 'ec2-security-group' ] ]
+      GroupDescription: Enable SSH access via port 22
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0
